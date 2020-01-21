@@ -16,6 +16,6 @@ Next, there is a [starter tutorial](https://docs.godotengine.org/en/latest/tutor
 
 ## Advanced topics
 
-Link to vr-common doc?
-Render models?
+Link to vr-common doc?  
+Render models?  
 [[Using OpenVR overlays]]
