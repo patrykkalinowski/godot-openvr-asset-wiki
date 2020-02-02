@@ -17,5 +17,5 @@ Next, there is a [starter tutorial](https://docs.godotengine.org/en/latest/tutor
 ## Advanced topics
 
 [Godot VR Common](https://github.com/GodotVR/godot-vr-common/wiki)  
-Render models?  
+[[Displaying 3D controller models]]
 [[Using OpenVR overlays]]
