@@ -36,7 +36,7 @@ We initialize Godot OpenVR almost as normal, only with a few changes:
 1. Since we do not use the main Viewport, we don't change any Viewport settings here.
 2. We set the OpenVR library to "overlay" mode before initializing OpenVR.
 
-Create a new scene (which will become your main scene), attach a new script (GDScript), and write the following in it's script **_ready()** function:
+Create a new scene (which will become your main scene), attach a new script (GDScript), and write the following in it's script **_init()** function:
 
 ```GDScript
 # Get configuration object
@@ -50,6 +50,7 @@ var arvr_interface : ARVRInterface = ARVRServer.find_interface("OpenVR")
 if arvr_interface and arvr_interface.initialize():
     pass
 ```
+The reason we're putting it into **_init()** instead of **_ready()** as you might expect is to keep it simple for this tutorial. **_init()** will be executed before the Viewport will be instanced, so OpenVR will be ready before we try to make an overlay.
 
 Once that is done, when you run the project, Godot will ask you to select a main scene. Select your newly created scene. Once selected and the program runs, not much will happen but there should be no errors.
 
