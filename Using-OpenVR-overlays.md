@@ -1,5 +1,3 @@
-# Using OpenVR overlays
-
 OpenVR has an overlay feature, which allows you to draw graphics onto planes located in the OpenVR world. These are drawn on top of other OpenVR applications that might be running, like games. Unlike normal OpenVR applications that can only run one at a time, overlay applications run alongside normal OpenVR applications.
 
 These overlays can be attached to the HMD or the controllers (so it will track/move with them), or statically positioned in the OpenVR space.
