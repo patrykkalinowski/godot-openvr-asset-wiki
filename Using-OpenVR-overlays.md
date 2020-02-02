@@ -25,7 +25,7 @@ Overlays are implemented in Godot OpenVR as a GDNative script (it's basically li
 ### Installing the Godot OpenVR module
 
 1. Create a folder named **addons** in your project's main folder.
-2. Download the Godot OpenVR repository's master branch, unpack it, and copy the **demos/addons/godot-openvr** folder to your **addons** folder, which now should look like:
+2. Download the Godot OpenVR repository's master branch, unpack it, and copy the **godot-openvr** folder (that sits in **demos/addons/** to your **addons** folder, which now should look like:
 
 [[images/openvr_addon.png]]
 
@@ -48,9 +48,32 @@ OpenVRConfig.set_tracking_universe(1) # Set to SEATED MODE = 0, STANDING MODE = 
 var arvr_interface : ARVRInterface = ARVRServer.find_interface("OpenVR")
 
 if arvr_interface and arvr_interface.initialize():
-        pass
+    pass
 ```
+
+Once that is done, when you run the project, Godot will ask you to select a main scene. Select your newly created scene. Once selected and the program runs, not much will happen but there should be no errors.
 
 ### Attach the OpenVROverlay to a Viewport
 
+In your scene, create a new Viewport node. Then, in the file browser, browse to the **addons/godot-openvr** folder, and drag the class named **OpenVROverlay.gdns** to the Viewport's **script** property.
+
+This turns this Viewport into a VR overlay already!
+
+[[images/openvr_overlay_script.png]]
+
+You might have noticed that two new properties have appeared on the Viewport that normally aren't there:
+
+**Overlay Visible (overlay_visible)**
+
+This controls whether the overlay is visible to the user or not. By default this is enabled.
+
+**Overlay Width In Meters (overlay_width_in_meters)**
+
+This controls the width of the overlay, in meters. Note that this is only a reference for OpenVR, and you can still modify the size and shape of the overlay via setting the transform. By default, this is set to 1 meter.
+
 ### Let's put some things to display on the overlay
+
+Our overlay doesn't display anything at the moment, so it's quite boring to look at. We will add some content to the overlay, via a separate scene. The reason we use a separate scene is to make it easier to edit.
+
+Create a second scene in your project, a 2D scene. Note that this also could be a 3D scene, anything Godot can render to a Viewport can be rendered to an overlay!
+
