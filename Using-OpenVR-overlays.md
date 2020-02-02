@@ -76,5 +76,5 @@ This controls the width of the overlay, in meters. Note that this is only a refe
 
 Our overlay doesn't display anything at the moment, so it's quite boring to look at. We will add some content to the overlay, via a separate scene. The reason we use a separate scene is to make it easier to edit.
 
-Create a second scene in your project, a 2D scene. Note that this also could be a 3D scene, anything Godot can render to a Viewport can be rendered to an overlay!
+Create a second scene in your project, a 2D scene. Note that this could also be a 3D scene, anything Godot can render to a Viewport can be rendered to an overlay!
 
