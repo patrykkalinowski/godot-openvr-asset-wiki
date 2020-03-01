@@ -85,3 +85,5 @@ Add something to the scene, like a Sprite showing the already present Godot logo
 Run the project and see the overlay we just created:
 
 [[images/openvr_overlay_displayed.png]]
+
+And that's it! The overlay can show everything Godot can render, and it can even be transparent!
