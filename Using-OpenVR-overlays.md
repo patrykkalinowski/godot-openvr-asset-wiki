@@ -80,3 +80,8 @@ Our overlay doesn't display anything at the moment, so it's quite boring to look
 
 Create a second scene in your project, a 2D scene. Note that this could also be a 3D scene, anything Godot can render to a Viewport can be rendered to an overlay!
 
+Add something to the scene, like a Sprite showing the already present Godot logo in the project. Once that is done, instance this scene as a child of the Viewport.
+
+Run the project and see the overlay we just created:
+
+[[images/openvr_overlay_displayed.png]]
