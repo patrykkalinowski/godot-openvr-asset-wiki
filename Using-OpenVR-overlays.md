@@ -72,6 +72,8 @@ This controls whether the overlay is visible to the user or not. By default this
 
 This controls the width of the overlay, in meters. Note that this is only a reference for OpenVR, and you can still modify the size and shape of the overlay via setting the transform. By default, this is set to 1 meter.
 
+To finish our Viewport setup, make sure it has a size (by default it would be 0x0). For a Vive Index, you could put it at 2160x1200. If you are unsure, set it to 500 by 500 pixels now.
+
 ### Let's put some things to display on the overlay
 
 Our overlay doesn't display anything at the moment, so it's quite boring to look at. We will add some content to the overlay, via a separate scene. The reason we use a separate scene is to make it easier to edit.
