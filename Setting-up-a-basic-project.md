@@ -86,7 +86,7 @@ Finally we set `Engine.target_fps` to 90. This set the update rate for the physi
 
 Just to get started we want to visualise our hands and we do this by adding a MeshInstance as a child to each hand node and simply setting up a cube.
 
-[[image/openvr_hand_cube.png]]
+[[images/openvr_hand_cube.png]]
 
 Obviously we don't want a cube but for our getting started it will do. You can read all about actually getting a controller displayed here: [[Displaying 3D controller models]].
 
@@ -95,4 +95,4 @@ Obviously we don't want a cube but for our getting started it will do. You can r
 
 And now we can run our project. The first time Godot will ask you to select the scene you want to run, select the scene you've saved and away we go.
 
-[[image/openvr_beginner.png]]
+[[images/openvr_beginner.png]]
