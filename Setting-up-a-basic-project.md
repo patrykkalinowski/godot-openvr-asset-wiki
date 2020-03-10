@@ -1,5 +1,3 @@
-# Setting up a basic project
-
 The below steps show how you can set up a bare minimum project in Godot using the OpenVR plugin.
 
 Note that you can get a head start by simply adding the `res://addons/godot-openvr/scenes/ovr_first_person.tscn` scene as a subscene or using the `res://addons/godot-openvr/scenes/ovr_main.gd` as a script on your ARVRServer node (some of this is only available in the upcoming 1.1 release of this plugin).
