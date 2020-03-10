@@ -6,7 +6,7 @@ Possible use cases for overlays are chat overlays for streamers, displaying adva
 
 ## Getting a version of Godot OpenVR with overlay support
 
-The released asset library version does not have support for overlays just yet (this will come with the release of Godot 3.2), so you will need to use the Godot OpenVR module ([godot_openvr](https://github.com/GodotVR/godot_openvr)) master branch for now. This asset's master branch will be updated soon to make this easier.
+Note that for overlay support you need atleast Godot 3.1 but it is recommended you use Godot 3.2. Layout support was added to this module in version 1.0.5.
 
 ## Basic concepts
 
