@@ -194,7 +194,7 @@ Now we add this as a subscene in our construct scene:
 
 [[images/openvr_viewports_with_ui.png]]
 
-## Spectator camera
+## 3D person spectator camera
 
 One thing that is often done in VR is to output a spectator camera to desktop. 
 
