@@ -161,3 +161,56 @@ We also call our function to set the initial size.
 
 Now we can run our project and test it out. Note that if you want to see a working example of the above code check out [the demo in the main source repository](https://github.com/GodotVR/godot_openvr/tree/master/demo).
 
+## Moving away from our spectator view
+
+The above nicely fixes our sRGB issue but what if we want to display something completely different on screen?
+
+Let's remove our TextureRect and replace it with a [ViewportContainer](https://docs.godotengine.org/en/3.2/classes/class_viewportcontainer.html). Make sure this is placed above our HMD viewport
+
+We now add a new `ViewPort` as a child to our `ViewportContainer`. This is the viewport we'll use as our output to screen.
+
+We will be resizing our viewport size in code in a minute, the rest of the viewport settings really depends on what you want to do with it. We're going to add a 2D interface in a minute so I'm turning `Hdr` off, `Disable 3d` on and set `Usage` to `2D`.
+
+Next we change the script on our construct node to this:
+```
+extends Node2D
+
+func on_window_size_changed():
+	$ViewportContainer/Viewport.size = OS.window_size
+
+func _ready():
+	get_tree().get_root().connect("size_changed", self, "on_window_size_changed")
+	on_window_size_changed();
+```
+
+So all we're doing here is resizing our viewport to match our window size.
+
+Finally we create a new 2D scene. Having this as a seperate scene makes it easier to test the 2D UI out by itself.
+For our example we're just adding a button into this scene that doesn't do anything.
+
+[[images/openvr_2d_ui.png]]
+
+Now we add this as a subscene in our construct scene:
+
+[[images/openvr_viewports_with_ui.png]]
+
+## Spectator camera
+
+One thing that is often done in VR is to output a spectator camera to desktop. 
+
+Especially when this virtual camera is attached to a tracker which is attached to a real camera so you can do green screen composition with the virtual world.
+
+For this we need to make sure our desktop viewport is able to handle 3D rendering by leaving `Disable 3D` off and setting `Usage` to `3D`.
+
+Then we add a camera to our desktop viewport.
+
+All the ARVR nodes have to remain in our VR viewport and we'll need to add the tracked puck as a 3rd ARVRController to the scene. 
+We can use a [RemoteTransform](https://docs.godotengine.org/en/3.2/classes/class_remotetransform.html) node to copy this trackers position to our camera. 
+
+3D objects you want visible both in VR and on the desktop should be added after the viewports. Again I suggest creating a new scene for these.
+
+Our construct scene should look something like this:
+
+[[images/OpenVR_viewport_spectatorcam.png]]
+
+This however is a bigger topic for which we'll make a demo available in due time.
