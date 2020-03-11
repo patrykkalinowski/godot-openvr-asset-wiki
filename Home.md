@@ -17,6 +17,7 @@ Next, there is a [starter tutorial](https://docs.godotengine.org/en/latest/tutor
 ## Beginner topics
 
 - [[Setting up a basic project]] - The bare minimum to get started
+- [[OpenVR actions]] - Using the OpenVR actions interface (coming in 1.1)
 
 ## Advanced topics
 
