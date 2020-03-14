@@ -1,4 +1,4 @@
-> **Important** Support for the OpenVR action system is currently under development and the functionality presented here is not yet available in the released plugin. This information is presented to make people aware of this breaking change, to help those wanting to test the functionality early, and to gain feedback on this functionality. It is planned to be included in the next major release of the plugin.
+>> **Important** Support for the OpenVR action system is currently under development and the functionality presented here is not yet available in the released plugin. This information is presented to make people aware of this breaking change, to help those wanting to test the functionality early, and to gain feedback on this functionality. It is planned to be included in the next major release of the plugin.
 
 **This document is a work in progress!**
 
@@ -14,7 +14,7 @@ For instance Vive controllers have trackpads, Oculus Touch controllers have joys
 When you install the new version of the plugin it comes with a default `actions.json` file that will automatically be used. This file is stored alongside mappings for all controllers OpenVR supports by default. You can find these files in the `res://addons/godot-openvr/actions` folder.
 
 The default `actions.json` file is setup for compatibility with the other GodotVR plugins and basically results in the plugin working as before. Every button, trigger and joystick is mapped to the buttons and axis Godot is able to react to.
-This is great when you want to build a game that you can deploy to all VR platforms Godot supports without having to worry about implementing different input system.
+This is great when you want to build a game that you can deploy to all VR platforms Godot supports without having to worry about implementing different input systems.
 But doing so means you get non of the benefits of the OpenVR action system.
 
 The default file is still good to have a look at for the syntax and formatting but it is suggested you start with a new file that you configure for the actions you actually need.
@@ -44,6 +44,10 @@ Inside this folder we create a new `actions.json` file and place the following t
 			"binding_url" : "bindings_holographic_controller.json"
 		},
 		{
+			"controller_type" : "gamepad",
+			"binding_url" : "bindings_gamepad.json"
+		},
+		{
 			"controller_type" : "generic",
 			"binding_url" : "bindings_generic.json"
 		}
@@ -51,12 +55,20 @@ Inside this folder we create a new `actions.json` file and place the following t
 	"actions": [
 		{
 			"name": "/actions/demo/in/our_first_action",
+			"requirement": "suggested",
 			"type": "boolean"
+		}
+	],
+	"action_set": [
+		{
+			"name": "/actions/demo",
+			"usage": "leftright"
 		}
 	],
 	"localization" : [
 		{
 			"language_tag": "en_US",
+			"/actions/demo" : "Demo actions",
 			"/actions/demo/in/our_first_action" : "Our first action"
 		}
 	]
@@ -77,7 +89,12 @@ We'll need to create these files as well, create each file alongside our `action
 ```
 Be sure to change `controller_type` to match the controller type in the bindings list.
 
-In the `actions` section we define our actions. Each action has a `name` and a `type`. Right now we're only defining one action and we don't have any of our default actions. As a result none of the default button and axis logic in Godot will work. We do still track the HMD and the controllers.
+In the `actions` section we define our actions. Each action has a `name`, `requirement` and a `type`. Right now we're only defining one action and we don't have any of our default actions. As a result none of the default button and axis logic in Godot will work. We do still track the HMD and the controllers.
+
+The supported requirements are:
+- `mandatory`, this action has to be bound
+- `suggested`, OpenVR will highlight this if it's not bound
+- `optional`, OpenVR will not complain if this isn't bound.
 
 The supported types are:
 - `boolean`, a button that can be pressed or released
@@ -85,6 +102,8 @@ The supported types are:
 - `vector2`, a coordinate between `vec(-1.0, -1.0)` and `vec(1.0, 1.0)`
 - `pose`, a tracked location on the controller
 - `vibration`, the only output type that allows you to controll a haptic output.
+
+In the `action_sets` section we define our action sets. We'll talk about this later.
 
 In the `localization` section you can provide human readable descriptions for each action.
 
@@ -113,7 +132,7 @@ func _ready():
 Here we are loading and then instantiating our OpenVRConfig class. This is an object in the OpenVR plugin that allows you to further configure our plugin.
 
 We use it to set the `action_json_path` property to point to our `actions.json` file.
-We then set `default_actions_set` to `/actions/demo`, we'll talk about action sets in a minute.
+We then set `default_actions_set` to `/actions/demo`.
 
 It is **very** important these configuration changes are made before you initialize the plugin. Changing them afterwards at best will go unnoticed, at worst have unpredictable effects.
 
@@ -130,7 +149,7 @@ You should now see this window:
 
 [[images/openvr_actions_default_bindings.png]]
 
-Just edit our current bindings file. I'm not going to give a full tutorial on setting up bindings here, play around with the interface. For our demo purposes I've set up my controller like so:
+Just edit your current bindings file. I'm not going to give a full tutorial on setting up bindings here, play around with the interface. For our demo purposes I've set up my controller like so:
 
 [[images/openvr_actions_knuckles.png]]
 
@@ -145,7 +164,7 @@ When you hit the back button you go back to the previous screen and you can sele
 OpenVRAction is a new GDNative object in our plugin that allows us to interact with input actions such as button presses and joystick input. 
 
 Simply create a spatial node in your scene and drag the OpenVRAction.gdns script file into its script property. We assign our `our_first_action` action to the `Pressed Action` property.
-You spatial nodes inspector should now look like this:
+Your spatial nodes inspector should now look like this:
 
 [[images/openvr_action.png]]
 
@@ -172,6 +191,7 @@ We can add such a pose to our `actions.json` file like so:
 		...
 		{
 			"name": "/actions/demo/in/our_first_pose",
+			"requirement": "suggested",
 			"type": "pose"
 		}
 	],
@@ -186,26 +206,72 @@ We can add such a pose to our `actions.json` file like so:
 ```
 
 Now we can run our project and edit our bindings again.
-**need to add screenshot**
 
-Simply create a spatial node as a child of our `ARVROrigin` node and drag the OpenVRAction.gdns script file into its script property. 
-Now set our `Action` property to `/actions/demo/in/our_first_pose` and our `On Hand` property to `right`. 
-You spatial nodes inspector should now look like this:
+[[images/openvr_actions_pose.png]]
+
+Note how our controller has various poses for each controller. Here we've assigned `our first pose` to the right hand hand grip pose. 
+
+Back in Godot simply create a spatial node as a child of our `ARVROrigin` node and drag the OpenVRAction.gdns script file into its script property. Note that we are not making this a child of the ARVRController.
+
+Set our `Action` property to `/actions/demo/in/our_first_pose` and our `On Hand` property to `right`. 
+Your spatial nodes inspector should now look like this:
 
 [[images/openvr_pose.png]]
 
 This node will now automatically be positioned by the OpenVR plugin.
 
-To be continued....
+We can visualise this by adding a mesh instance with a transparent sphere to our pose node:
+
+[[images/openvr_pose_screenshot.png]]
 
 ## OpenVRHaptic
 
-OpenVRHaptic is a new GDNative object in our plugin that allows us to provide haptic feedback to the user through our controllers. 
+OpenVRHaptic is a new GDNative object in our plugin that allows us to provide haptic feedback to the user through our controllers.
+
+We can add haptic actions into our `actions.json` as follows:
+```
+{	
+	...
+	"actions": [
+		...
+		{
+			"name": "/actions/demo/in/our_first_haptic",
+			"requirement": "suggested",
+			"type": "vibration"
+		}
+	],
+	"localization" : [
+		{
+			"language_tag": "en_US",
+			...
+			"/actions/demo/in/our_first_haptic" : "Our first haptic"
+		}
+	]		
+}
+```
+
+Again we run our project at this point in time so we can configure the bindings:
+
+[[images/openvr_action_haptics.png]]
+
+Back in Godot we add another spatial node and drag our `OpenVRHaptics.gdns` file into our script property. In this case we leave `On Hand` on any so the rumble will activate on whichever hand you bound the action to.
+Haptics happen in pulses so we start with setting our `Duration` to 0.1 seconds.
+Then we set the `Frequency` of the pulse to 4 (hertz?), this is how fast our rumble will vibrate.
+And we set the `Amplitude` to 1.0, the higher this number the stronger the pulses. 
 
 [[images/openvr_haptics.png]]
 
+In order to trigger the pulse we'll add a script on our main scene.
+Now we select our `OpenVRAction` node that we created a little above and go to the `Node` tab next to the `Inspector` pane. We select pressed and connect that signal.
+We create that function on our main script.
 
-To be continued....
+In here we enter the following code:
+```
+func _on_OpenVRAction_pressed():
+	$OpenVRHaptic.trigger_pulse()
+```
+
+Now every time we squeeze the trigger we get a haptic pulse.
 
 ## OpenVRController
 
@@ -213,4 +279,56 @@ To be continued....
 
 ## Action sets
 
-I will write about this soon.
+While plenty of games will work fine with a fixed setup as we've created above there are also plenty of games that need more flexibility. 
+
+For example you may want to use completely different actions when you are in a selection environment before your main game starts, and then have actions bound for the game itself when it starts.
+Or you may have a character walking around that can enter a vehicle, once controlling the vehicle you want to use actions specific to operating that vehicle. 
+
+OpenVR solves this with action sets. So far we've created one action set called `/actions/demo` which we've told OpenVR at the beginning is our default action set.
+This is the only action set that will be used to bind our old button mappings too.
+
+You can create additional action sets in your `actions.json` like so:
+```
+	...
+	"action_set": [
+		{
+			"name": "/actions/demo",
+			"usage": "leftright"
+		},
+		{
+			"name": "/actions/menu",
+			"usage": "single"
+		}
+	],
+	"localization" : [
+		{
+			"language_tag": "en_US",
+			"/actions/demo" : "Demo actions",
+			"/actions/menu" : "Menu actions",
+	...
+
+```
+
+Actions that belong to our new action set should all be prefixed with our action set `name`. The `usage` has the following options:
+- `leftright`, we can bind actions to our individual left and right controllers
+- `single`, we only bind one controller and the other controller mirrors the bindings.
+- `hidden`, the user will not see this action set.
+
+We now need to change our initialisation to tell our plugin of our new actions set:
+```
+...
+	# Load our config before we initialise
+	OpenVRConfig = preload("res://addons/godot-openvr/OpenVRConfig.gdns");
+	if OpenVRConfig:
+		OpenVRConfig = OpenVRConfig.new()
+		
+		OpenVRConfig.action_json_path = "res://ovr_actions/actions.json"
+		OpenVRConfig.default_action_set = "/actions/demo"
+		OpenVRConfig.register_action_set("/actions/menu")
+...
+```
+When we want to switch to this new action set we simply call:
+```
+	OpenVRConfig.set_active_action_set("/actions/menu")
+```
+
