@@ -275,7 +275,15 @@ Now every time we squeeze the trigger we get a haptic pulse.
 
 ## OpenVRController
 
-> This has not yet been implemented!
+OpenVRController is a script that extends the ARVRController node and adds the OpenVRAction and OpenVRHaptic logic directly onto the controller.
+
+>> Currently there doesn't seem to be a way to extend this further with GDScript which does hinder things. In the demo on the source repository the left hand controller works in 'the old way' while the right hand controller uses the OpenVRController script.
+
+For buttons an array of input actions is exposed through the property `button_actions`. Setting this property to an array of input action strings will result in those actions being monitored on that controller. If the user presses any of the buttons related to these actions on the given controller a `action_pressed` signal is emitted. If the button is released a `action_released` is emitted.
+
+To access any of the analog actions you simply call `get_analog(action)` on the controller and a `Vector2` is returned with the current values for that input.
+
+Finally `trigger_haptic(action, duration, frequency, amplitude)` allows you to trigger haptic feedback on that controller provided that action is bound to the controller.
 
 ## Action sets
 
