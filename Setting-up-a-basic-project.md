@@ -58,7 +58,7 @@ func _ready():
 		OS.vsync_enabled = false
 		
 		# up our physics to 90fps to get in sync with our rendering
-		Engine.target_fps = 90
+		Engine.iterations_per_second= 90
 ```
 
 Our plugin registers itself automatically, the code `ARVRServer.find_interface("OpenVR")` will find the registered plugin.
@@ -78,7 +78,7 @@ Most HMDs run at 90fps.
 
 OpenVR will sync to the refresh rate of the HMD so turning of Godots vsync ensures we can render at the correct framerate.
 
-Finally we set `Engine.target_fps` to 90. This set the update rate for the physics engine which needs to be in sync with the framerate of our game or objects controlled by our physics engine moving irradicly. 
+Finally we set `Engine.iterations_per_second` to 90. This set the update rate for the physics engine which needs to be in sync with the framerate of our game or objects controlled by our physics engine moving irradicly. 
 
 # Adding placeholders for our hands
 
