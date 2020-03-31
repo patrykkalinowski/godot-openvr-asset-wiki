@@ -2,9 +2,9 @@
 
 **This document is a work in progress!**
 
-Valve introduced a new actions based system for OpenVR awhile back that replaces the current controller implementations with a system that gives far more control over how actions map to given inputs on the controller. 
+Valve introduced a new actions based system for OpenVR awhile back that replaces the current controller implementations with a system that gives far more control over how actions map to given inputs on the controller.
 
-Instead of hardcoding in your game that when the user presses button 1 a gun fires, you now define a `Fire Gun` action and bind that to the correct input. Especially where controllers differ in inputs they offer this makes it far easier to adopt those to your game. 
+Instead of hardcoding in your game that when the user presses button 1 a gun fires, you now define a `Fire Gun` action and bind that to the correct input. Especially where controllers differ in inputs they offer this makes it far easier to adopt those to your game.
 For instance Vive controllers have trackpads, Oculus Touch controllers have joysticks, Windows Mixed Reality controllers and Index controllers have both.
 
 > The only limitation as far as I can tell is that the action system only works with two controllers. It does make sense seeing we can only hold two controllers at any given time. You can have more controllers/trackers active but there won't be any way to interact with buttons. As generally these additional controllers are tracking pucks that probably isn't an issue. A clear case of the benefits outweighing the drawbacks.
@@ -119,7 +119,7 @@ func _ready():
 	OpenVRConfig = preload("res://addons/godot-openvr/OpenVRConfig.gdns");
 	if OpenVRConfig:
 		OpenVRConfig = OpenVRConfig.new()
-		
+
 		OpenVRConfig.action_json_path = "res://ovr_actions/actions.json"
 		OpenVRConfig.default_action_set = "/actions/demo"
 
@@ -138,14 +138,14 @@ It is **very** important these configuration changes are made before you initial
 
 ## Binding our actions
 
-We can now run our game to configure our bindings. 
-OpenVR will likely inform you of missing bindings and provide you with the bindings interface inside of the HMD but I find it easier to set this up on the desktop. 
+We can now run our game to configure our bindings.
+OpenVR will likely inform you of missing bindings and provide you with the bindings interface inside of the HMD but I find it easier to set this up on the desktop.
 
 [[images/openvr_actions_open_cs.png]]
 
 From there select `SHOW OLD BINDING UI` and select Godot or if that is not available go through `MANAGE CONTROLLER BINDINGS`. You must do this while your game is running.
 
-You should now see this window: 
+You should now see this window:
 
 [[images/openvr_actions_default_bindings.png]]
 
@@ -153,7 +153,7 @@ Just edit your current bindings file. I'm not going to give a full tutorial on s
 
 [[images/openvr_actions_knuckles.png]]
 
-As you can see I've mapped the right hand trigger to our action. 
+As you can see I've mapped the right hand trigger to our action.
 
 Now press the 'Replace Default Binding' to update our bindings in our project.
 
@@ -161,7 +161,7 @@ When you hit the back button you go back to the previous screen and you can sele
 
 ## OpenVRAction
 
-OpenVRAction is a new GDNative object in our plugin that allows us to interact with input actions such as button presses and joystick input. 
+OpenVRAction is a new GDNative object in our plugin that allows us to interact with input actions such as button presses and joystick input.
 
 Simply create a spatial node in your scene and drag the OpenVRAction.gdns script file into its script property. We assign our `our_first_action` action to the `Pressed Action` property.
 Your spatial nodes inspector should now look like this:
@@ -169,13 +169,13 @@ Your spatial nodes inspector should now look like this:
 [[images/openvr_action.png]]
 
 The `Pressed Action` property allows us to identify the button press action we want this node to react to. When the user invokes the action the node will emit a `pressed` signal. When the user releases the button a `released` signal is emitted.
-You can also call `is_pressed` to query whether the action is currently invoked. 
+You can also call `is_pressed` to query whether the action is currently invoked.
 
 The `Analog Action` property allows us to identify the analog action we want to have access to. When set you can call `get_analog` to obtain the current state of that analog input.
 
 The `On Hand` property allows you to set whether you want to react regardless of which controller the action is bound to or if you only want to react for an action bound to a specific hadn.
 
-You can combine a pressed and analog action in a single node. 
+You can combine a pressed and analog action in a single node.
 
 **Note** this is only a spatial node to give easy access and visibility to actions that have been configured. It doesn't matter where you create the node, this is one of the cool things around the action system. You may want to add a "throttle" action as a child of the a vehicle body for instance.
 
@@ -209,11 +209,11 @@ Now we can run our project and edit our bindings again.
 
 [[images/openvr_actions_pose.png]]
 
-Note how our controller has various poses for each controller. Here we've assigned `our first pose` to the right hand hand grip pose. 
+Note how our controller has various poses for each controller. Here we've assigned `our first pose` to the right hand hand grip pose.
 
 Back in Godot simply create a spatial node as a child of our `ARVROrigin` node and drag the OpenVRAction.gdns script file into its script property. Note that we are not making this a child of the ARVRController.
 
-Set our `Action` property to `/actions/demo/in/our_first_pose` and our `On Hand` property to `right`. 
+Set our `Action` property to `/actions/demo/in/our_first_pose` and our `On Hand` property to `right`.
 Your spatial nodes inspector should now look like this:
 
 [[images/openvr_pose.png]]
@@ -230,7 +230,7 @@ OpenVRHaptic is a new GDNative object in our plugin that allows us to provide ha
 
 We can add haptic actions into our `actions.json` as follows:
 ```
-{	
+{
 	...
 	"actions": [
 		...
@@ -257,7 +257,7 @@ Again we run our project at this point in time so we can configure the bindings:
 Back in Godot we add another spatial node and drag our `OpenVRHaptics.gdns` file into our script property. In this case we leave `On Hand` on any so the rumble will activate on whichever hand you bound the action to.
 Haptics happen in pulses so we start with setting our `Duration` to 0.1 seconds.
 Then we set the `Frequency` of the pulse to 4 (hertz?), this is how fast our rumble will vibrate.
-And we set the `Amplitude` to 1.0, the higher this number the stronger the pulses. 
+And we set the `Amplitude` to 1.0, the higher this number the stronger the pulses.
 
 [[images/openvr_haptics.png]]
 
@@ -285,12 +285,76 @@ To access any of the analog actions you simply call `get_analog(action)` on the 
 
 Finally `trigger_haptic(action, duration, frequency, amplitude)` allows you to trigger haptic feedback on that controller provided that action is bound to the controller.
 
+## OpenVRSkeleton
+
+OpenVRSkeleton is a script that extends a [Skeleton](https://docs.godotengine.org/en/3.2/classes/class_skeleton.html) node and updates the skeleton based on sensor feedback from your controller. This way you can animate fingers on a hand to mimic the motions of the players real fingers. It is an approximation, not full hand tracking, but it is incredibly believable. The plugin comes with a preconfigured scenes for each hand that have everything setup correctly but we'll look at reproducing the setup here.
+
+First we need two special entries in our `action.json` file, you'll see these are slightly different then the ones we did before:
+```
+{
+	...
+	"actions": [
+		...
+		{
+			"name": "/actions/godot/in/left_hand",
+			"type": "skeleton",
+			"skeleton": "/skeleton/hand/left"
+		},
+		{
+			"name": "/actions/godot/in/right_hand",
+			"type": "skeleton",
+			"skeleton": "/skeleton/hand/right"
+		}
+	],
+	"localization" : [
+		{
+			"language_tag": "en_US",
+			...
+			"/actions/godot/in/left_hand" : "Left hand",
+			"/actions/godot/in/right_hand" : "Right hand"
+		}
+	]		
+}
+```
+
+Now in order to correctly position our hands we will need to use an OpenVRPose spatial node at the base where we set the action to either our left hand or right hand path. In this case it is important not to nominate a hand but leave that property on `Any`. This will ensure the hand is correctly placed in relation to our controller.
+
+Now in SteamVR you will find GLB files for fully animated gloves here `Steam\steamapps\common\MainSteamVR\resources\rendermodels\vr_glove\`.
+If you want to skin your own hand model you can also find GLB files with just the skeleton in them here: `Steam\steamapps\common\MainSteamVR\resources\skeletons`
+
+If you use the full GLB files with textures be aware that the textures will be embedded in our tscn file and that is pretty wasteful on space. You'll see that the scenes included in our plugin have the textures saved as separate png files which is much better.
+
+You should open the GLB file in Godot and tell Godot to inherit the scene so we can make our own augmentations to the scene. We're going to use our right hand in this writeup but the same applies for our left hand.
+
+[[images/openvr_hand_glb.png]]
+
+As mentioned our root node should be an OpenVRPose node. Godot will by default make our GLB root node a Spatial so all we need to do is drag our `OpenVRPose.gdns` script into our script slot and setup our action and hand property like so:
+
+[[images/openvr_pose_for_hand.png]]
+
+Now select our skeleton node and drag our `OpenVRSkeleton.gdns` script into its script slot. We use the same action as with our pose here:
+
+[[images/openvr_skeleton.png]]
+
+And that's it, it will now work.
+
+The `Keep Bones` property tells our logic to keep the bones already loaded, if you set that to false or if the number of bones does not match with what OpenVR expects we'll load the bones structure in that OpenVR supplies. This can be handy if you're generating a mesh on the fly but generally you should keep this property to true. Do note that recreating bones will require you to setup related objects such as BoneAttachments.
+
+The `Motion Range` property currently offers two options that OpenVR supports. The default `With controller` means that the positioning of fingers will assume our controller is there. If the controller is visible making a fist shows us grabbing the controller.
+The option `Without controller` pretends the controller isn't there so making a fist actually results in a closed fist. Nice if your controller is hidden.
+
+Finally we can complete our scene by adding a few [BoneAttachment](https://docs.godotengine.org/en/3.2/classes/class_boneattachment.html) nodes as children to our Skeleton node. These are special spatial nodes that will follow the location of a specified node. In this way we can configure the bone attachment to follow the tip of our pinky:
+
+[[images/openvr_pinky_boneattachment.png]]
+
+Attach a physic area to this and you can detect what this finger touches. 
+
 ## Action sets
 
-While plenty of games will work fine with a fixed setup as we've created above there are also plenty of games that need more flexibility. 
+While plenty of games will work fine with a fixed setup as we've created above there are also plenty of games that need more flexibility.
 
 For example you may want to use completely different actions when you are in a selection environment before your main game starts, and then have actions bound for the game itself when it starts.
-Or you may have a character walking around that can enter a vehicle, once controlling the vehicle you want to use actions specific to operating that vehicle. 
+Or you may have a character walking around that can enter a vehicle, once controlling the vehicle you want to use actions specific to operating that vehicle.
 
 OpenVR solves this with action sets. So far we've created one action set called `/actions/demo` which we've told OpenVR at the beginning is our default action set.
 This is the only action set that will be used to bind our old button mappings too.
@@ -329,7 +393,7 @@ We now need to change our initialisation to tell our plugin of our new actions s
 	OpenVRConfig = preload("res://addons/godot-openvr/OpenVRConfig.gdns");
 	if OpenVRConfig:
 		OpenVRConfig = OpenVRConfig.new()
-		
+
 		OpenVRConfig.action_json_path = "res://ovr_actions/actions.json"
 		OpenVRConfig.default_action_set = "/actions/demo"
 		OpenVRConfig.register_action_set("/actions/menu")
@@ -339,4 +403,3 @@ When we want to switch to this new action set we simply call:
 ```
 	OpenVRConfig.set_active_action_set("/actions/menu")
 ```
-
