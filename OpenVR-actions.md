@@ -224,6 +224,15 @@ We can visualise this by adding a mesh instance with a transparent sphere to our
 
 [[images/openvr_pose_screenshot.png]]
 
+The below image shows all possible poses positions on an Oculus Quest controller to give an idea of how they are meant to work:
+
+[[images/controller_poses.png]]
+
+* black is the base of our controller (base pose)
+* orange is at our grip buttons (grip pose)
+* yellow is at the tip of the controller (tip pose)
+* white + light-blue, this is our raw pose which is also the location our ARVRController is placed and where any child node would be placed.
+
 ## OpenVRHaptic
 
 OpenVRHaptic is a new GDNative object in our plugin that allows us to provide haptic feedback to the user through our controllers.
@@ -347,7 +356,7 @@ Finally we can complete our scene by adding a few [BoneAttachment](https://docs.
 
 [[images/openvr_pinky_boneattachment.png]]
 
-Attach a physic area to this and you can detect what this finger touches. 
+Attach a physic area to this and you can detect what this finger touches.
 
 ## Action sets
 
